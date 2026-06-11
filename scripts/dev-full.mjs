@@ -1,6 +1,7 @@
 import { spawn } from "node:child_process";
+import { dirname, join } from "node:path";
 
-const npm = process.platform === "win32" ? "npm.cmd" : "npm";
+const npm = process.platform === "win32" ? join(dirname(process.execPath), "npm.cmd") : "npm";
 
 const processes = [
   spawn(npm, ["run", "server"], { stdio: "inherit", shell: false }),
