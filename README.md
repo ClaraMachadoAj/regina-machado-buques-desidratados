@@ -1,6 +1,8 @@
-# Regina Machado - Buques Desidratados
+# Regina Machado Buques Desidratados
 
-Site institucional e comercial criado em React, TypeScript e Vite para apresentar o trabalho artesanal de preservacao de buques de casamento.
+Aplicacao institucional e comercial criada em React, TypeScript e Vite para apresentar o trabalho artesanal de preservacao de buques de casamento.
+
+Nome recomendado para o repositorio: `regina-machado-buques-desidratados`.
 
 ## Stack
 

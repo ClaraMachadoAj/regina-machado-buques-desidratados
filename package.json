@@ -1,8 +1,8 @@
 {
-  "name": "regina-machado-buques",
+  "name": "regina-machado-buques-desidratados",
   "version": "1.0.0",
   "private": true,
-  "description": "Site institucional e comercial para Regina Machado - Buques Desidratados.",
+  "description": "Aplicacao institucional e comercial para Regina Machado - Buques Desidratados.",
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
