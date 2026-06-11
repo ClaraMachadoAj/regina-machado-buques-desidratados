@@ -311,6 +311,7 @@ function ContactFields({ draft, updateDraft }: FieldProps) {
         }
       />
       <Textarea
+        className="admin-field-wide"
         label="Mensagem automatica do WhatsApp"
         value={draft.contact.whatsappMessage}
         onChange={(value) =>
@@ -342,6 +343,7 @@ function TextFields({ draft, updateDraft }: FieldProps) {
         }
       />
       <Textarea
+        className="admin-field-wide"
         label="Escreva aqui o texto que aparece no inicio do site"
         value={draft.hero.subtitle}
         onChange={(value) =>
@@ -356,6 +358,7 @@ function TextFields({ draft, updateDraft }: FieldProps) {
         }
       />
       <Textarea
+        className="admin-field-wide"
         label="Texto sobre Regina Machado"
         value={draft.about.paragraphs.join("\n\n")}
         onChange={(value) =>
@@ -369,6 +372,7 @@ function TextFields({ draft, updateDraft }: FieldProps) {
         }
       />
       <Textarea
+        className="admin-field-wide"
         label="Texto final antes do botao de contato"
         value={draft.contactTitle.text}
         onChange={(value) =>
@@ -627,16 +631,18 @@ function TextInput({
 }
 
 function Textarea({
+  className = "",
   label,
   value,
   onChange
 }: {
+  className?: string;
   label: string;
   value: string;
   onChange: (value: string) => void;
 }) {
   return (
-    <label className="admin-field">
+    <label className={`admin-field ${className}`.trim()}>
       <span>{label}</span>
       <textarea value={value} onChange={(event) => onChange(event.target.value)} rows={5} />
     </label>
