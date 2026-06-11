@@ -1,9 +1,14 @@
 import { Menu, X } from "lucide-react";
 import { useState } from "react";
 import { navigation } from "../data/siteContent";
+import type { SiteContent } from "../data/siteContent";
 import { WhatsAppButton } from "./WhatsAppButton";
 
-export function Header() {
+type HeaderProps = {
+  content: SiteContent;
+};
+
+export function Header({ content }: HeaderProps) {
   const [isOpen, setIsOpen] = useState(false);
 
   function closeMenu() {
@@ -13,8 +18,8 @@ export function Header() {
   return (
     <header className="site-header">
       <a className="brand" href="#inicio" onClick={closeMenu} aria-label="Regina Machado - inicio">
-        <span>Regina Machado</span>
-        <small>Buques Desidratados</small>
+        <span>{content.brand.name}</span>
+        <small>{content.brand.subtitle}</small>
       </a>
 
       <button
@@ -35,7 +40,13 @@ export function Header() {
         ))}
       </nav>
 
-      <WhatsAppButton className="header-cta">Falar pelo WhatsApp</WhatsAppButton>
+      <WhatsAppButton
+        className="header-cta"
+        phone={content.contact.whatsapp}
+        message={content.contact.whatsappMessage}
+      >
+        Falar pelo WhatsApp
+      </WhatsAppButton>
     </header>
   );
 }

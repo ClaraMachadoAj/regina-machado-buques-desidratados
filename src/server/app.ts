@@ -1,6 +1,6 @@
 import cors from "cors";
 import express from "express";
-import { faqs, processSteps, testimonials } from "../data/siteContent";
+import { defaultSiteContent } from "../data/siteContent";
 import { buildWhatsappUrl, contactConfig } from "../config/contact";
 
 export function createServer() {
@@ -14,11 +14,7 @@ export function createServer() {
   });
 
   app.get("/api/site", (_request, response) => {
-    response.json({
-      processSteps: processSteps.map(({ title, text }) => ({ title, text })),
-      faqs,
-      testimonials
-    });
+    response.json(defaultSiteContent);
   });
 
   app.post("/api/contact-link", (request, response) => {

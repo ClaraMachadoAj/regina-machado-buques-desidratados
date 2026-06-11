@@ -16,8 +16,9 @@ describe("createServer", () => {
     const response = await request(app).get("/api/site");
 
     expect(response.status).toBe(200);
+    expect(response.body.brand.name).toBe("Regina Machado");
     expect(response.body.processSteps).toHaveLength(4);
-    expect(response.body.faqs.length).toBeGreaterThan(0);
+    expect(response.body.faq.length).toBeGreaterThan(0);
     expect(response.body.testimonials.length).toBeGreaterThan(0);
   });
 

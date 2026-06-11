@@ -11,15 +11,11 @@ describe("fetchSiteContent", () => {
       "fetch",
       vi.fn().mockResolvedValue({
         ok: true,
-        json: async () => ({ processSteps: [], faqs: [], testimonials: [] })
+        json: async () => ({ brand: { name: "Teste" } })
       })
     );
 
-    await expect(fetchSiteContent()).resolves.toEqual({
-      processSteps: [],
-      faqs: [],
-      testimonials: []
-    });
+    await expect(fetchSiteContent()).resolves.toEqual({ brand: { name: "Teste" } });
   });
 
   it("throws when the API response fails", async () => {

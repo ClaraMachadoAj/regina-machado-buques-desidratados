@@ -5,6 +5,8 @@ import { App } from "./App";
 
 describe("App", () => {
   beforeEach(() => {
+    window.localStorage.clear();
+    window.history.pushState({}, "", "/");
     vi.stubGlobal(
       "fetch",
       vi.fn().mockReturnValue(new Promise(() => undefined))
@@ -54,5 +56,78 @@ describe("App", () => {
     expect(links.length).toBeGreaterThan(1);
     expect(links[0]).toHaveAttribute("href", expect.stringContaining("https://wa.me/"));
     expect(links[0]).toHaveAttribute("href", expect.stringContaining("Gostaria%20de%20saber"));
+  });
+
+  it("protects the Regina admin area with a simple login", async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, "", "/admin");
+
+    render(<App />);
+
+    expect(screen.getByRole("heading", { name: /entrar no painel da regina/i })).toBeInTheDocument();
+
+    await user.type(screen.getByLabelText("Senha"), "regina2026");
+    await user.click(screen.getByRole("button", { name: "Entrar" }));
+
+    expect(screen.getByRole("heading", { name: /ola, regina/i })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: /contato/i })).toBeInTheDocument();
+  });
+
+  it("saves an admin edit and shows it on the public site", async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, "", "/admin");
+
+    const { unmount } = render(<App />);
+
+    await user.type(screen.getByLabelText("Senha"), "regina2026");
+    await user.click(screen.getByRole("button", { name: "Entrar" }));
+    await user.click(screen.getByRole("button", { name: /informacoes principais/i }));
+
+    const brandInput = screen.getByLabelText("Nome da marca");
+    await user.clear(brandInput);
+    await user.type(brandInput, "Regina Flores Eternas");
+    await user.click(screen.getByRole("button", { name: /salvar alteracoes/i }));
+
+    expect(screen.getByText(/suas alteracoes foram salvas/i)).toBeInTheDocument();
+
+    unmount();
+    window.history.pushState({}, "", "/");
+    render(<App />);
+
+    expect(screen.getByText("Regina Flores Eternas")).toBeInTheDocument();
+  });
+
+  it("lets Regina review editable admin sections", async () => {
+    const user = userEvent.setup();
+    window.history.pushState({}, "", "/admin");
+
+    render(<App />);
+
+    await user.type(screen.getByLabelText("Senha"), "regina2026");
+    await user.click(screen.getByRole("button", { name: "Entrar" }));
+
+    await user.click(screen.getByRole("button", { name: /contato/i }));
+    expect(screen.getByLabelText(/numero do whatsapp/i)).toBeInTheDocument();
+    expect(screen.getByLabelText(/mensagem automatica/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /textos do site/i }));
+    expect(screen.getByLabelText(/texto que aparece no inicio/i)).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /fotos dos buques/i }));
+    await user.click(screen.getByRole("button", { name: /adicionar foto na galeria/i }));
+    expect(screen.getByDisplayValue("Nova foto")).toBeInTheDocument();
+    const removePhotoButtons = screen.getAllByRole("button", { name: /remover foto/i });
+    await user.click(removePhotoButtons[removePhotoButtons.length - 1]);
+
+    await user.click(screen.getByRole("button", { name: /antes e depois/i }));
+    expect(screen.getByText("Adicionar imagem do antes")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /depoimentos de clientes/i }));
+    await user.click(screen.getByRole("button", { name: /adicionar depoimento/i }));
+    expect(screen.getByDisplayValue("Nome da cliente")).toBeInTheDocument();
+
+    await user.click(screen.getByRole("button", { name: /duvidas frequentes/i }));
+    await user.click(screen.getByRole("button", { name: "Adicionar pergunta" }));
+    expect(screen.getByDisplayValue("Nova pergunta")).toBeInTheDocument();
   });
 });

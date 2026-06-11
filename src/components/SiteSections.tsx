@@ -1,33 +1,33 @@
-import { Instagram, Mail, MapPin } from "lucide-react";
-import { benefits, galleryItems } from "../data/siteContent";
-import { contactConfig } from "../config/contact";
+import { Heart, Instagram, Leaf, Mail, MapPin, PackageCheck, ShieldCheck } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
+import type { Benefit, FaqItem, ProcessStep, SiteContent, Testimonial } from "../data/siteContent";
 import { SectionTitle } from "./SectionTitle";
 import { WhatsAppButton } from "./WhatsAppButton";
-import type { FaqItem, Testimonial } from "../services/siteApi";
-import type { ProcessStep } from "../data/siteContent";
 
-export function AboutSection() {
+type ContentProps = {
+  content: SiteContent;
+};
+
+const benefitIcons: Record<Benefit["icon"], LucideIcon> = {
+  heart: Heart,
+  leaf: Leaf,
+  shield: ShieldCheck,
+  package: PackageCheck
+};
+
+export function AboutSection({ content }: ContentProps) {
   return (
     <section className="section split" id="sobre">
       <div>
-        <p className="eyebrow">Regina Machado</p>
-        <h2>Uma historia dedicada a eternizar momentos</h2>
-        <p>
-          Regina Machado trabalha ha mais de 22 anos com a preservacao de buques de
-          noivas, transformando flores naturais em lembrancas cheias de significado.
-          Cada buque e recebido com cuidado, sensibilidade e atencao aos detalhes.
-        </p>
-        <p>
-          O resultado une memoria, beleza organica e acabamento artesanal para que o
-          casamento continue presente na casa e na historia da familia.
-        </p>
+        <p className="eyebrow">{content.about.eyebrow}</p>
+        <h2>{content.about.title}</h2>
+        {content.about.paragraphs.map((paragraph) => (
+          <p key={paragraph}>{paragraph}</p>
+        ))}
       </div>
       <aside className="note-panel" aria-label="Mensagem da Regina Machado">
-        <span>Atendimento cuidadoso</span>
-        <p>
-          O buque e tratado como parte da sua historia. Antes de qualquer etapa, Regina
-          orienta sobre envio, conservacao e expectativas do resultado final.
-        </p>
+        <span>{content.about.noteTitle}</span>
+        <p>{content.about.noteText}</p>
       </aside>
     </section>
   );
@@ -35,15 +35,16 @@ export function AboutSection() {
 
 type ProcessSectionProps = {
   steps: ProcessStep[];
+  content: SiteContent;
 };
 
-export function ProcessSection({ steps }: ProcessSectionProps) {
+export function ProcessSection({ content, steps }: ProcessSectionProps) {
   return (
     <section className="section" id="como-funciona">
       <SectionTitle
-        eyebrow="Como funciona"
-        title="Um processo simples, sensivel e bem acompanhado"
-        description="Da entrega das flores ao acabamento final, cada etapa e pensada para preservar o significado do buque."
+        eyebrow={content.processTitle.eyebrow}
+        title={content.processTitle.title}
+        description={content.processTitle.description}
       />
       <div className="process-grid">
         {steps.map((step, index) => (
@@ -58,19 +59,19 @@ export function ProcessSection({ steps }: ProcessSectionProps) {
   );
 }
 
-export function GallerySection() {
+export function GallerySection({ content }: ContentProps) {
   return (
     <section className="section gallery-section" id="galeria">
       <SectionTitle
-        eyebrow="Galeria"
-        title="Flores preservadas com aparencia romantica e natural"
-        description="Uma direcao visual inspirada em casamento, afeto e pecas feitas a mao."
+        eyebrow={content.galleryTitle.eyebrow}
+        title={content.galleryTitle.title}
+        description={content.galleryTitle.description}
       />
       <div className="gallery-grid">
-        {galleryItems.map((item) => (
+        {content.gallery.map((item) => (
           <article className="gallery-card" key={item.title}>
             <img
-              src="/assets/buques-desidratados.png"
+              src={item.image}
               alt={item.title}
               style={{ objectPosition: item.position }}
             />
@@ -85,22 +86,47 @@ export function GallerySection() {
   );
 }
 
-export function BenefitsSection() {
+export function BeforeAfterSection({ content }: ContentProps) {
+  return (
+    <section className="section before-after" id="antes-depois">
+      <SectionTitle
+        eyebrow={content.beforeAfter.eyebrow}
+        title={content.beforeAfter.title}
+        description={content.beforeAfter.description}
+      />
+      <div className="before-after-grid">
+        <figure>
+          <img src={content.beforeAfter.beforeImage} alt={content.beforeAfter.beforeLabel} />
+          <figcaption>{content.beforeAfter.beforeLabel}</figcaption>
+        </figure>
+        <figure>
+          <img src={content.beforeAfter.afterImage} alt={content.beforeAfter.afterLabel} />
+          <figcaption>{content.beforeAfter.afterLabel}</figcaption>
+        </figure>
+      </div>
+    </section>
+  );
+}
+
+export function BenefitsSection({ content }: ContentProps) {
   return (
     <section className="section muted-band">
       <SectionTitle
-        eyebrow="Beneficios"
-        title="Por que preservar o buque?"
-        description="A desidratacao transforma as flores em uma lembranca decorativa e cheia de afeto."
+        eyebrow={content.benefitsTitle.eyebrow}
+        title={content.benefitsTitle.title}
+        description={content.benefitsTitle.description}
       />
       <div className="benefits-grid">
-        {benefits.map(({ icon: Icon, title, text }) => (
-          <article className="benefit-card" key={title}>
-            <Icon aria-hidden="true" />
-            <h3>{title}</h3>
-            <p>{text}</p>
-          </article>
-        ))}
+        {content.benefits.map(({ icon, title, text }) => {
+          const Icon = benefitIcons[icon] ?? Heart;
+          return (
+            <article className="benefit-card" key={title}>
+              <Icon aria-hidden="true" />
+              <h3>{title}</h3>
+              <p>{text}</p>
+            </article>
+          );
+        })}
       </div>
     </section>
   );
@@ -108,12 +134,16 @@ export function BenefitsSection() {
 
 type TestimonialsSectionProps = {
   testimonials: Testimonial[];
+  content: SiteContent;
 };
 
-export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) {
+export function TestimonialsSection({ content, testimonials }: TestimonialsSectionProps) {
   return (
     <section className="section testimonials">
-      <SectionTitle eyebrow="Depoimentos" title="O que as noivas costumam sentir ao receber" />
+      <SectionTitle
+        eyebrow={content.testimonialsTitle.eyebrow}
+        title={content.testimonialsTitle.title}
+      />
       <div className="testimonial-grid">
         {testimonials.map((testimonial) => (
           <figure key={testimonial.name}>
@@ -128,12 +158,13 @@ export function TestimonialsSection({ testimonials }: TestimonialsSectionProps) 
 
 type FaqSectionProps = {
   faqs: FaqItem[];
+  content: SiteContent;
 };
 
-export function FaqSection({ faqs }: FaqSectionProps) {
+export function FaqSection({ content, faqs }: FaqSectionProps) {
   return (
     <section className="section faq" id="duvidas">
-      <SectionTitle eyebrow="Duvidas frequentes" title="Antes de enviar o seu buque" />
+      <SectionTitle eyebrow={content.faqTitle.eyebrow} title={content.faqTitle.title} />
       <div className="faq-list">
         {faqs.map((item) => (
           <details key={item.question}>
@@ -146,30 +177,32 @@ export function FaqSection({ faqs }: FaqSectionProps) {
   );
 }
 
-export function ContactSection() {
+export function ContactSection({ content }: ContentProps) {
   return (
     <section className="section contact-section" id="contato">
       <div>
-        <p className="eyebrow">Contato</p>
-        <h2>Vamos cuidar do seu buque?</h2>
-        <p>
-          Envie uma mensagem com a data do casamento, cidade e fotos do buque. Regina
-          responde com as orientacoes para entrega e orcamento.
-        </p>
-        <WhatsAppButton>Solicitar orcamento pelo WhatsApp</WhatsAppButton>
+        <p className="eyebrow">{content.contactTitle.eyebrow}</p>
+        <h2>{content.contactTitle.title}</h2>
+        <p>{content.contactTitle.text}</p>
+        <WhatsAppButton
+          phone={content.contact.whatsapp}
+          message={content.contact.whatsappMessage}
+        >
+          Solicitar orcamento pelo WhatsApp
+        </WhatsAppButton>
       </div>
       <address className="contact-list">
-        <a href={`mailto:${contactConfig.email}`}>
+        <a href={`mailto:${content.contact.email}`}>
           <Mail aria-hidden="true" />
-          {contactConfig.email}
+          {content.contact.email}
         </a>
-        <a href={contactConfig.instagramUrl} target="_blank" rel="noreferrer">
+        <a href={content.contact.instagram} target="_blank" rel="noreferrer">
           <Instagram aria-hidden="true" />
           Instagram
         </a>
         <span>
           <MapPin aria-hidden="true" />
-          Atendimento sob combinacao
+          {content.contact.location}
         </span>
       </address>
     </section>

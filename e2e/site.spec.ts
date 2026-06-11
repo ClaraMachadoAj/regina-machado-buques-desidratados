@@ -23,3 +23,19 @@ test("mobile menu exposes navigation links", async ({ page }) => {
   await page.getByRole("button", { name: /abrir menu/i }).click();
   await expect(page.getByRole("link", { name: "Galeria" })).toBeVisible();
 });
+
+test("Regina can login and save a simple site edit", async ({ page }) => {
+  await page.goto("/admin");
+
+  await page.getByLabel("Senha").fill("regina2026");
+  await page.getByRole("button", { name: "Entrar" }).click();
+  await expect(page.getByRole("heading", { name: /ola, regina/i })).toBeVisible();
+
+  await page.getByRole("button", { name: /informacoes principais/i }).click();
+  await page.getByLabel("Nome da marca").fill("Regina Flores Eternas");
+  await page.getByRole("button", { name: /salvar alteracoes/i }).click();
+  await expect(page.getByText(/suas alteracoes foram salvas/i)).toBeVisible();
+
+  await page.getByRole("link", { name: /ver como ficou no site/i }).click();
+  await expect(page.getByText("Regina Flores Eternas").first()).toBeVisible();
+});

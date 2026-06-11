@@ -5,17 +5,21 @@ type WhatsAppButtonProps = {
   children: string;
   variant?: "primary" | "ghost" | "floating";
   className?: string;
+  phone?: string;
+  message?: string;
 };
 
 export function WhatsAppButton({
   children,
   variant = "primary",
-  className = ""
+  className = "",
+  phone,
+  message
 }: WhatsAppButtonProps) {
   return (
     <a
       className={`button button-${variant} ${className}`.trim()}
-      href={buildWhatsappUrl()}
+      href={buildWhatsappUrl(phone, message)}
       target="_blank"
       rel="noreferrer"
     >

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { fallbackSiteContent, fetchSiteContent } from "../services/siteApi";
-import type { SiteApiContent } from "../services/siteApi";
+import type { SiteContent } from "../data/siteContent";
 
 export function useSiteContent() {
-  const [content, setContent] = useState<SiteApiContent>(fallbackSiteContent);
+  const [content, setContent] = useState<SiteContent>(fallbackSiteContent);
   const [status, setStatus] = useState<"idle" | "ready" | "fallback">("idle");
 
   useEffect(() => {
