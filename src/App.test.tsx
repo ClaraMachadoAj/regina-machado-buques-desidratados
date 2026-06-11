@@ -7,7 +7,7 @@ describe("App", () => {
   beforeEach(() => {
     vi.stubGlobal(
       "fetch",
-      vi.fn().mockRejectedValue(new Error("API unavailable during unit test"))
+      vi.fn().mockReturnValue(new Promise(() => undefined))
     );
   });
 
@@ -21,7 +21,7 @@ describe("App", () => {
     expect(
       screen.getByRole("heading", { name: /eternize o buque do seu casamento/i })
     ).toBeInTheDocument();
-    expect(screen.getByRole("heading", { name: /como funciona/i })).toBeInTheDocument();
+    expect(screen.getByRole("heading", { name: /um processo simples/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /por que preservar o buque/i })).toBeInTheDocument();
     expect(screen.getByRole("heading", { name: /vamos cuidar do seu buque/i })).toBeInTheDocument();
   });

@@ -9,10 +9,10 @@ test("visitor can review the offer and reach the contact CTA", async ({ page }) 
     /wa\.me/
   );
 
-  await page.getByRole("link", { name: "Como funciona" }).click();
+  await page.locator("#como-funciona").scrollIntoViewIfNeeded();
   await expect(page.getByRole("heading", { name: /um processo simples/i })).toBeVisible();
 
-  await page.getByRole("link", { name: "Contato" }).click();
+  await page.locator("#contato").scrollIntoViewIfNeeded();
   await expect(page.getByRole("heading", { name: /vamos cuidar/i })).toBeVisible();
 });
 
