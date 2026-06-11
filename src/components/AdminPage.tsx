@@ -234,6 +234,15 @@ type FieldProps = {
 function PrincipalFields({ draft, updateDraft }: FieldProps) {
   return (
     <div className="admin-form-grid">
+      <div className="admin-field-wide">
+        <ImageField
+          label="Foto principal da capa do site"
+          image={draft.hero.image}
+          onChange={(image) =>
+            updateDraft((current) => ({ ...current, hero: { ...current.hero, image } }))
+          }
+        />
+      </div>
       <TextInput
         label="Nome da marca"
         value={draft.brand.name}

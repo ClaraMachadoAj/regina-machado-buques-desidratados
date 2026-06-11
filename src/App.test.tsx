@@ -82,6 +82,7 @@ describe("App", () => {
     await user.type(screen.getByLabelText("Senha"), "regina2026");
     await user.click(screen.getByRole("button", { name: "Entrar" }));
     await user.click(screen.getByRole("button", { name: /informacoes principais/i }));
+    expect(screen.getByText("Foto principal da capa do site")).toBeInTheDocument();
 
     const brandInput = screen.getByLabelText("Nome da marca");
     await user.clear(brandInput);
